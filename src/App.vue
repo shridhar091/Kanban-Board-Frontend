@@ -7,15 +7,15 @@ import { getSections, createSection } from "./services/api";
 
 const sections = ref([]);
 
-const handleGetStarted = async () => {
-  const defaultSections = ["To Do", "In Progress", "Done"];
-  for (const name of defaultSections) {
-    await createSection({ title: name });
-  }
+// const handleGetStarted = async () => {
+//   const defaultSections = ["To Do", "In Progress", "Done"];
+//   for (const name of defaultSections) {
+//     await createSection({ title: name });
+//   }
 
-  const updated = await getSections();
-  sections.value = updated.data;
-};
+//   const updated = await getSections();
+//   sections.value = updated.data;
+// };
 
 onMounted(async () => {
   const data = await getSections();
@@ -28,13 +28,13 @@ onMounted(async () => {
 <template>
   <div class="app">
     <!-- Landing Page -->
-    <div v-if="sections.length === 0" class="landing">
+    <!-- <div v-if="sections.length === 0" class="landing">
       <h1>Welcome to KanbanBoard</h1>
       <button @click="handleGetStarted">Get Started</button>
-    </div>
+    </div> -->
 
     <!-- Kanban Board -->
-    <KanbanBoard v-else />
+    <KanbanBoard  />
   </div>
 </template>
 
