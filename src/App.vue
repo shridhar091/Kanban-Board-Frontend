@@ -7,11 +7,6 @@ import { getSections, createSection } from "./services/api";
 
 const sections = ref([]);
 
-onMounted(async () => {
-  const data = await getSections();
-  sections.value = data.data;
-});
-
 const handleGetStarted = async () => {
   const defaultSections = ["To Do", "In Progress", "Done"];
   for (const name of defaultSections) {
@@ -21,18 +16,26 @@ const handleGetStarted = async () => {
   const updated = await getSections();
   sections.value = updated.data;
 };
+
+onMounted(async () => {
+  const data = await getSections();
+  sections.value = data.data;
+});
+
+
 </script>
 
 <template>
   <div class="app">
     <!-- Landing Page -->
-    <div v-if="sections.length === 0" class="landing">
+    <!-- <div v-if="sections.length === 0" class="landing">
       <h1>Welcome to KanbanBoard</h1>
       <button @click="handleGetStarted">Get Started</button>
-    </div>
+    </div> -->
 
     <!-- Kanban Board -->
-    <KanbanBoard v-else />
+    <!-- <KanbanBoard v-else /> -->
+     <KanbanBoard/>
   </div>
 </template>
 
