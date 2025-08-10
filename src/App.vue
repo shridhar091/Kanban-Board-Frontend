@@ -28,14 +28,13 @@ onMounted(async () => {
 <template>
   <div class="app">
     <!-- Landing Page -->
-    <!-- <div v-if="sections.length === 0" class="landing">
+    <div v-if="sections.length === 0" class="landing">
       <h1>Welcome to KanbanBoard</h1>
       <button @click="handleGetStarted">Get Started</button>
-    </div> -->
+    </div>
 
     <!-- Kanban Board -->
-    <!-- <KanbanBoard v-else /> -->
-     <KanbanBoard/>
+    <KanbanBoard v-else />
   </div>
 </template>
 
