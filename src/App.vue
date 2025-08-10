@@ -3,19 +3,9 @@ import { ref, onMounted } from "vue";
 import "@fontsource/inter";
 import "@fontsource/inter/400.css";
 import KanbanBoard from "./components/KanbanBoard.vue";
-import { getSections, createSection } from "./services/api";
+import { getSections } from "./services/api";
 
 const sections = ref([]);
-
-// const handleGetStarted = async () => {
-//   const defaultSections = ["To Do", "In Progress", "Done"];
-//   for (const name of defaultSections) {
-//     await createSection({ title: name });
-//   }
-
-//   const updated = await getSections();
-//   sections.value = updated.data;
-// };
 
 onMounted(async () => {
   const data = await getSections();
@@ -27,13 +17,6 @@ onMounted(async () => {
 
 <template>
   <div class="app">
-    <!-- Landing Page -->
-    <!-- <div v-if="sections.length === 0" class="landing">
-      <h1>Welcome to KanbanBoard</h1>
-      <button @click="handleGetStarted">Get Started</button>
-    </div> -->
-
-    <!-- Kanban Board -->
     <KanbanBoard  />
   </div>
 </template>
