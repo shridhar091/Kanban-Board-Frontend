@@ -12,7 +12,6 @@ onMounted(async () => {
   sections.value = data.data;
 });
 
-
 </script>
 
 <template>

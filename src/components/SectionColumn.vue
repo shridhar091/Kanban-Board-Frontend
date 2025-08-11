@@ -10,7 +10,7 @@ const props = defineProps({
     required: true,
   },
 });
-
+const showDropdown = ref(false);
 const showTaskModal = ref(false);
 const emit = defineEmits(["taskDropped"]);
 
@@ -75,6 +75,13 @@ const onDrop = (e) => {
     <div style="display: flex; justify-content: space-between; margin-right: 18px">
       <h3 class="section-title">{{ section.title }}</h3>
       <h3 @click="showTaskModal = true" style="cursor: pointer"><b>+</b></h3>
+      <div class="menu">
+        <button class="dots" @click="showDropdown = !showDropdown">⋮</button>
+        <div v-if="showDropdown" class="dropdown">
+          <button >Edit</button>
+          <button >Delete</button>
+        </div>
+      </div>
     </div>
 
     <div class="kanban-column">
@@ -148,5 +155,53 @@ const onDrop = (e) => {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dots {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.dots:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown {
+  position: absolute;
+  top: 24px; 
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  padding: 6px 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  min-width: 100px;
+}
+
+.dropdown button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  width: 100%;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown button:hover {
+  background-color: #f5f5f5;
 }
 </style>
