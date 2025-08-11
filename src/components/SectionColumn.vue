@@ -161,7 +161,6 @@ const onDrop = (e) => {
   position: relative;
   display: flex;
   align-items: center;
-  text-align: center;
   text-decoration: solid;
   gap: 8px;
 }
@@ -169,6 +168,7 @@ const onDrop = (e) => {
 .dots {
   background: none;
   color: rgb(109, 106, 106);
+  text-align: center;
   border: none;
   font-size: 18px;
   cursor: pointer;
