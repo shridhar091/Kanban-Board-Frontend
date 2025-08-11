@@ -76,7 +76,7 @@ const onDrop = (e) => {
       <h3 class="section-title">{{ section.title }}</h3>
       <div class="menu">
         <button class="dots" @click="showTaskModal = true">+</button>
-        <button class="dots" @click="showDropdown = !showDropdown"></button>
+        <button class="dots" @click="showDropdown = !showDropdown">...</button>
         <div v-if="showDropdown" class="dropdown">
           <button >Edit</button>
           <button >Delete</button>
@@ -168,6 +168,7 @@ const onDrop = (e) => {
 
 .dots {
   background: none;
+  color: rgb(109, 106, 106);
   border: none;
   font-size: 18px;
   cursor: pointer;
