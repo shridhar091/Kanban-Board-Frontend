@@ -76,7 +76,7 @@ const onDrop = (e) => {
       <h3 class="section-title">{{ section.title }}</h3>
       <div class="menu">
         <button class="dots" @click="showTaskModal = true">+</button>
-        <button class="dots" @click="showDropdown = !showDropdown">...</button>
+        <button class="dots" @click="showDropdown = !showDropdown">&hellip;</button>
         <div v-if="showDropdown" class="dropdown">
           <button >Edit</button>
           <button >Delete</button>
