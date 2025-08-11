@@ -175,6 +175,14 @@ const onDrop = (e) => {
   padding: 4px;
   border-radius: 50%;
   transition: background-color 0.2s ease;
+
+  display: flex;                /* center icon horizontally & vertically */
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;                  /* make it a circle */
+  height: 28px;
+  line-height: 0;               /* avoid extra text vertical spacing */
 }
 
 .dots:hover {
