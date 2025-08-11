@@ -1,7 +1,7 @@
 <script setup>
 import TaskCard from "./TaskCard.vue";
 import AddTaskModal from "./AddTaskModal.vue";
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { createTask,deleteSection } from "../services/api";
 
 const props = defineProps({
@@ -11,8 +11,34 @@ const props = defineProps({
   },
 });
 const showDropdown = ref(false);
+const dropdownRef = ref(null);
 const showTaskModal = ref(false);
 const emit = defineEmits(["taskDropped", "sectionDeleted"]);
+
+// Toggle dropdown
+const toggleDropdown = () => {
+  showDropdown.value = !showDropdown.value;
+};
+
+// Close dropdown
+const closeDropdown = () => {
+  showDropdown.value = false;
+};
+
+// Detect click outside
+const handleClickOutside = (event) => {
+  if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
+    closeDropdown();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 
 const addTaskToSection = async (taskData) => {
   try {
@@ -39,6 +65,7 @@ const handleSectionDelete = async () => {
   } catch (err) {
     console.error("Failed to delete section", err);
   }
+  closeDropdown();
 };
 
 const isDragOver = ref(false);
@@ -86,7 +113,7 @@ const onDrop = (e) => {
       <h3 class="section-title">{{ section.title }}</h3>
       <div class="menu">
         <button class="dots" @click="showTaskModal = true">+</button>
-        <button class="dots" @click="showDropdown = !showDropdown">&hellip;</button>
+        <button class="dots" @click.stop="toggleDropdown">&hellip;</button>
         <div v-if="showDropdown" class="dropdown">
           <button >Edit</button>
           <button @click="handleSectionDelete">Delete</button>
