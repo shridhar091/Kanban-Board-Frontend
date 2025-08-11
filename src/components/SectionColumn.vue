@@ -74,9 +74,8 @@ const onDrop = (e) => {
   >
     <div style="display: flex; justify-content: space-between; margin-right: 18px">
       <h3 class="section-title">{{ section.title }}</h3>
-      <h3 @click="showTaskModal = true" style="cursor: pointer"><b>+</b></h3>
       <div class="menu">
-        <button @click="showTaskModal = true">+</button>
+        <button class="add-task-btn" @click="showTaskModal = true">+</button>
         <button class="dots" @click="showDropdown = !showDropdown">⋮</button>
         <div v-if="showDropdown" class="dropdown">
           <button >Edit</button>
