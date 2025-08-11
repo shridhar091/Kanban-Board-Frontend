@@ -31,6 +31,10 @@ const handleTaskDelete = (id) => {
   );
 };
 
+const handleSectionDelete = (id) =>{
+  console.log(props.section)
+}
+
 const isDragOver = ref(false);
 
 const onDragOver = (e) => {
@@ -79,7 +83,7 @@ const onDrop = (e) => {
         <button class="dots" @click="showDropdown = !showDropdown">&hellip;</button>
         <div v-if="showDropdown" class="dropdown">
           <button >Edit</button>
-          <button >Delete</button>
+          <button @click="handleSectionDelete">Delete</button>
         </div>
       </div>
     </div>
