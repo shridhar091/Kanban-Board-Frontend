@@ -2,7 +2,7 @@
 import TaskCard from "./TaskCard.vue";
 import AddTaskModal from "./AddTaskModal.vue";
 import { ref } from "vue";
-import { createTask } from "../services/api";
+import { createTask,deleteSection } from "../services/api";
 
 const props = defineProps({
   section: {
@@ -12,7 +12,7 @@ const props = defineProps({
 });
 const showDropdown = ref(false);
 const showTaskModal = ref(false);
-const emit = defineEmits(["taskDropped"]);
+const emit = defineEmits(["taskDropped", "sectionDeleted"]);
 
 const addTaskToSection = async (taskData) => {
   try {
@@ -31,9 +31,15 @@ const handleTaskDelete = (id) => {
   );
 };
 
-const handleSectionDelete = (id) =>{
-  console.log(props.section)
-}
+const handleSectionDelete = async () => {
+  if (!confirm("Are you sure you want to delete this section?")) return;
+  try {
+    await deleteSection(props.section._id);
+    emit("sectionDeleted", props.section._id);
+  } catch (err) {
+    console.error("Failed to delete section", err);
+  }
+};
 
 const isDragOver = ref(false);
 

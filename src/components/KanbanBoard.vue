@@ -103,6 +103,7 @@ const handleTaskDropped = async ({ taskId, fromSectionId, toSectionId }) => {
         :key="section._id"
         :section="section"
         @taskDropped="handleTaskDropped"
+        @sectionDeleted="sections = sections.filter(s => s._id !== $event)"
       />
     </div>
     <div>
