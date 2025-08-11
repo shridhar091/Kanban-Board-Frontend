@@ -113,11 +113,13 @@ const onDrop = (e) => {
       <h3 class="section-title">{{ section.title }}</h3>
       <div class="menu">
         <button class="dots" @click="showTaskModal = true">+</button>
-        <button class="dots" @click.stop="toggleDropdown">&hellip;</button>
-        <div v-if="showDropdown" class="dropdown">
-          <button >Edit</button>
-          <button @click="handleSectionDelete">Delete</button>
-        </div>
+         <div ref="dropdownRef" class="dropdown-wrapper">
+    <button class="dots" @click.stop="toggleDropdown">&hellip;</button>
+    <div v-if="showDropdown" class="dropdown">
+      <button @click="handleEdit">Edit</button>
+      <button @click="handleSectionDelete">Delete</button>
+    </div>
+  </div>
       </div>
     </div>
 
@@ -192,6 +194,11 @@ const onDrop = (e) => {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.dropdown-wrapper {
+  position: relative;
+  display: inline-block;
 }
 
 .menu {
