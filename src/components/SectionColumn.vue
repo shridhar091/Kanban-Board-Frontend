@@ -168,6 +168,9 @@ const onDrop = (e) => {
   border: none;
   font-size: 18px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   padding: 4px;
   border-radius: 50%;
   transition: background-color 0.2s ease;
