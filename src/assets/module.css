@@ -22,8 +22,46 @@
   padding: 8px;
   margin: 10px 0;
 }
+.modal select {
+  width: 95%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
+}
+
+.modal-buttons button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.modal-buttons .btn-primary {
+  background-color: #4CAF50; 
+  color: white;
+}
+
+.modal-buttons .btn-primary:hover {
+  background-color: #43a047;
+  transform: translateY(-1px);
+}
+
+.modal-buttons .btn-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.modal-buttons .btn-secondary:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-1px);
 }

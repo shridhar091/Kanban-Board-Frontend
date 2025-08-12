@@ -82,18 +82,18 @@ const handleTaskDropped = async ({ taskId, fromSectionId, toSectionId }) => {
       width="160px"
       src="https://www.sketchmonk.com/assets/general/logoo.svg"
     />
-      <div class="search-container">
-    <input type="text" placeholder="Search" class="search-input" />
+    <div class="search-container">
+      <input type="text" placeholder="Search" class="search-input" />
 
-    <div class="icon-group">
-      <button class="icon-btn">
-        <i class="fas fa-share"></i>
-      </button>
-      <button class="icon-btn">
-        <i class="fas fa-cog"></i>
-      </button>
+      <div class="icon-group">
+        <button class="icon-btn">
+          <i class="fas fa-share"></i>
+        </button>
+        <button class="icon-btn">
+          <i class="fas fa-cog"></i>
+        </button>
+      </div>
     </div>
-  </div>
   </div>
 
   <div class="kanban-board">
@@ -103,7 +103,7 @@ const handleTaskDropped = async ({ taskId, fromSectionId, toSectionId }) => {
         :key="section._id"
         :section="section"
         @taskDropped="handleTaskDropped"
-        @sectionDeleted="sections = sections.filter(s => s._id !== $event)"
+        @sectionDeleted="sections = sections.filter((s) => s._id !== $event)"
       />
     </div>
     <div>
@@ -163,7 +163,7 @@ const handleTaskDropped = async ({ taskId, fromSectionId, toSectionId }) => {
 
 .icon-group {
   display: flex;
-  gap: 6px; 
+  gap: 6px;
 }
 
 .icon-btn {

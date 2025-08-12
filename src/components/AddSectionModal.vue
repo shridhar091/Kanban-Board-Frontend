@@ -1,31 +1,53 @@
 <script setup>
-import { ref } from 'vue'
-import '../assets/module.css'
-const emit = defineEmits(['submit', 'close'])
+import { ref, watch } from "vue";
+import "../assets/module.css";
 
-const title = ref('')
-const error = ref('')
+const props = defineProps({
+  mode: {
+    type: String,
+    default: "add",
+  },
+  initialTitle: {
+    type: String,
+    default: "",
+  },
+});
+
+const emit = defineEmits(["submit", "close"]);
+
+const title = ref(props.initialTitle);
+const error = ref("");
+
+// Sync prop updates (important for edit mode)
+watch(
+  () => props.initialTitle,
+  (newVal) => {
+    title.value = newVal;
+  }
+);
 
 const handleSubmit = () => {
   if (!title.value.trim()) {
-    error.value = 'Title cannot be empty'
-    return
+    error.value = "Title cannot be empty";
+    return;
   }
-  emit('submit', title.value.trim())
-  title.value = ''
-  error.value = ''
-}
+  emit("submit", title.value.trim());
+  title.value = "";
+  error.value = "";
+};
 </script>
 
 <template>
   <div class="modal-overlay">
     <div class="modal">
-      <h3>Add New Section</h3>
+      <h3>{{ mode === "edit" ? "Edit Section" : "Add New Section" }}</h3>
       <input v-model="title" placeholder="Section title" />
       <p style="color: red">{{ error }}</p>
       <div class="modal-buttons">
-        <button @click="handleSubmit">Submit</button>
-        <button @click="$emit('close')">Cancel</button>
+        <button class="btn-primary" @click="handleSubmit">
+          {{ mode === "edit" ? "Update" : "Submit" }}
+        </button>
+        <button class="btn-secondary" @click="$emit('close')">Cancel</button>
       </div>
     </div>
   </div>

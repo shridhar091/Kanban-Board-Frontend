@@ -1,8 +1,10 @@
 <script setup>
+import { toast } from "vue3-toastify";
 import TaskCard from "./TaskCard.vue";
 import AddTaskModal from "./AddTaskModal.vue";
+import AddSectionModal from "./AddSectionModal.vue";
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import { createTask,deleteSection } from "../services/api";
+import { createTask, deleteSection, updateSection } from "../services/api";
 
 const props = defineProps({
   section: {
@@ -10,10 +12,16 @@ const props = defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits(["taskDropped", "sectionDeleted", "sectionUpdated"]);
+
 const showDropdown = ref(false);
 const dropdownRef = ref(null);
 const showTaskModal = ref(false);
-const emit = defineEmits(["taskDropped", "sectionDeleted"]);
+
+const showSectionModal = ref(false);
+const editMode = ref(false);
+const sectionTitleToEdit = ref("");
 
 // Toggle dropdown
 const toggleDropdown = () => {
@@ -42,10 +50,9 @@ onBeforeUnmount(() => {
 
 const addTaskToSection = async (taskData) => {
   try {
-    const newTask = await createTask(taskData);
-    props.section.taskIds.push(newTask);
+    const res = await createTask(taskData);
+    props.section.taskIds.push(res.data);
     showTaskModal.value = false;
-    window.location.reload()
   } catch (err) {
     console.error("Failed to add task", err);
   }
@@ -61,11 +68,45 @@ const handleSectionDelete = async () => {
   if (!confirm("Are you sure you want to delete this section?")) return;
   try {
     await deleteSection(props.section._id);
+    toast.success("Section deleted successfully!");
     emit("sectionDeleted", props.section._id);
   } catch (err) {
     console.error("Failed to delete section", err);
   }
   closeDropdown();
+};
+
+// Open edit modal
+const handleSectionEdit = () => {
+  editMode.value = true;
+  sectionTitleToEdit.value = props.section.title;
+  showSectionModal.value = true;
+  closeDropdown();
+};
+
+// Submit edit
+const handleSectionEditSubmit = async (newTitle) => {
+  try {
+    await updateSection(props.section._id, { title: newTitle });
+    props.section.title = newTitle;
+    emit("sectionUpdated", { id: props.section._id, title: newTitle });
+    showSectionModal.value = false;
+    editMode.value = false;
+  } catch (err) {
+    console.error("Failed to update section", err);
+  }
+};
+
+const handleTaskUpdate = (updatedTask) => {
+  const index = props.section.taskIds.findIndex(
+    (t) => t._id === updatedTask._id
+  );
+  if (index !== -1) {
+    props.section.taskIds[index] = {
+      ...props.section.taskIds[index],
+      ...updatedTask,
+    };
+  }
 };
 
 const isDragOver = ref(false);
@@ -109,17 +150,20 @@ const onDrop = (e) => {
     @dragleave.prevent="onDragLeave"
     @drop.prevent="onDrop"
   >
-    <div style="display: flex; justify-content: space-between; margin-right: 18px">
+    <div
+      style="display: flex; justify-content: space-between; margin-right: 18px"
+    >
       <h3 class="section-title">{{ section.title }}</h3>
       <div class="menu">
         <button class="dots" @click="showTaskModal = true">+</button>
-         <div ref="dropdownRef" class="dropdown-wrapper">
-    <button class="dots" @click.stop="toggleDropdown">&hellip;</button>
-    <div v-if="showDropdown" class="dropdown">
-      <button @click="handleEdit">Edit</button>
-      <button @click="handleSectionDelete">Delete</button>
-    </div>
-  </div>
+        <div ref="dropdownRef" class="dropdown-wrapper">
+          <button class="dots" @click.stop="toggleDropdown">...</button>
+
+          <div v-if="showDropdown" class="dropdown">
+            <button @click="handleSectionEdit">Edit</button>
+            <button @click="handleSectionDelete">Delete</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -130,6 +174,7 @@ const onDrop = (e) => {
           :key="task._id"
           :task="task"
           @on-deleted="handleTaskDelete"
+          @on-updated="handleTaskUpdate"
         />
       </div>
 
@@ -146,6 +191,14 @@ const onDrop = (e) => {
     :sectionId="section._id"
     @submit="addTaskToSection"
     @close="showTaskModal = false"
+  />
+
+  <AddSectionModal
+    v-if="showSectionModal"
+    :mode="editMode ? 'edit' : 'add'"
+    :initialTitle="sectionTitleToEdit"
+    @submit="handleSectionEditSubmit"
+    @close="showSectionModal = false"
   />
 </template>
 
@@ -220,13 +273,13 @@ const onDrop = (e) => {
   border-radius: 50%;
   transition: background-color 0.2s ease;
 
-  display: flex;                /* center icon horizontally & vertically */
+  display: flex;
   align-items: center;
   justify-content: center;
 
-  width: 28px;                  /* make it a circle */
+  width: 28px;
   height: 28px;
-  line-height: 0;               /* avoid extra text vertical spacing */
+  line-height: 0;
 }
 
 .dots:hover {
@@ -235,7 +288,7 @@ const onDrop = (e) => {
 
 .dropdown {
   position: absolute;
-  top: 24px; 
+  top: 24px;
   right: 0;
   background: white;
   border-radius: 8px;

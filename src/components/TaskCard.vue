@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from "vue";
-import { deleteTask } from "../services/api";
+import { toast } from "vue3-toastify";
+import { deleteTask,updateTask } from "../services/api";
+import AddTaskModal from "./AddTaskModal.vue";
 
 const props = defineProps({
   task: {
@@ -8,16 +10,34 @@ const props = defineProps({
     required: true,
   },
 });
-const emit = defineEmits(["onDeleted"]);
+const emit = defineEmits(["onDeleted", "onUpdated"]);
 
 const showDropdown = ref(false);
+const showEditModal = ref(false);
 
 const handleDelete = async () => {
+  if (!confirm("Are you sure you want to delete this Task?")) return;
   try {
     await deleteTask(props.task._id);
+    toast.success("Task deleted successfully!");
     emit("onDeleted", props.task._id);
   } catch (err) {
     console.error("Delete failed", err);
+  }
+};
+
+const handleTaskEdit = () => {
+  showEditModal.value = true;
+};
+
+const handleTaskEditSubmit = async (updatedTask) => {
+  try {
+    await updateTask(updatedTask._id, updatedTask);
+    emit("onUpdated", updatedTask);
+    showEditModal.value = false;
+    showDropdown.value = false;
+  } catch (err) {
+    console.error("Update failed", err);
   }
 };
 
@@ -68,6 +88,7 @@ const onDragStart = (event) => {
       <div class="menu">
         <button class="dots" @click="showDropdown = !showDropdown">⋮</button>
         <div v-if="showDropdown" class="dropdown">
+          <button @click="handleTaskEdit">Edit</button>
           <button @click="handleDelete">Delete</button>
         </div>
       </div>
@@ -88,6 +109,14 @@ const onDragStart = (event) => {
         <span class="tag">{{ task.description }}</span>
       </div>
     </div>
+     <AddTaskModal
+      v-if="showEditModal"
+      mode="edit"
+      :initialData="task"
+      :sectionId="task.sectionId"
+      @submit="handleTaskEditSubmit"
+      @close="showEditModal = false"
+    />
   </div>
 </template>
 

@@ -9,6 +9,7 @@ const API = axios.create({
 export const getSections = () => API.get('/sections')
 export const createSection = (data) => API.post('/sections', data)
 export const deleteSection = (id) => API.delete(`/sections/${id}`)
+export const updateSection = (id) => API.put(`/sections/${id}`,data)
 
 // Tasks
 export const createTask = (data) => API.post('/tasks', data)
