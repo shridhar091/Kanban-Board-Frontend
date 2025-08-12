@@ -155,10 +155,13 @@ const onDrop = (e) => {
     >
       <h3 class="section-title">{{ section.title }}</h3>
       <div class="menu">
-        <button class="dots" @click="showTaskModal = true">+</button>
-        <div ref="dropdownRef" class="dropdown-wrapper">
-          <button class="dots" @click.stop="toggleDropdown">...</button>
-
+        <button class="dots" @click="showTaskModal = true">
+          <i class="fa-sharp fa-thin fa-plus"></i>
+        </button>
+        <div class="dropdown-wrapper">
+          <button ref="dropdownRef" class="dots" @click="toggleDropdown">
+            <i class="fa-solid fa-ellipsis"></i>
+          </button>
           <div v-if="showDropdown" class="dropdown">
             <button @click="handleSectionEdit">Edit</button>
             <button @click="handleSectionDelete">Delete</button>
@@ -217,9 +220,17 @@ const onDrop = (e) => {
   padding: 12px;
   border-radius: 8px;
   width: 250px;
-  min-height: 75vh;
+  height: 75vh;
   overflow-y: auto;
   transition: background-color 0.3s;
+
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.kanban-column::-webkit-scrollbar {
+  display: none;
 }
 
 .section-title {
@@ -265,11 +276,10 @@ const onDrop = (e) => {
 .dots {
   background: none;
   color: rgb(109, 106, 106);
-  text-align: center;
   border: none;
   font-size: 18px;
   cursor: pointer;
-  padding: 4px;
+  /* padding: 4px; */
   border-radius: 50%;
   transition: background-color 0.2s ease;
 
@@ -277,9 +287,9 @@ const onDrop = (e) => {
   align-items: center;
   justify-content: center;
 
-  width: 28px;
+  /* width: 28px;
   height: 28px;
-  line-height: 0;
+  line-height: 0; */
 }
 
 .dots:hover {

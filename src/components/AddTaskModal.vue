@@ -4,7 +4,7 @@ import "../assets/module.css";
 
 const props = defineProps({
   sectionId: String,
-  mode: { type: String, default: "add" },
+  mode: { type: String, default: "add" }, // add or edit
   initialData: { type: Object, default: () => ({}) },
 });
 const emit = defineEmits(["submit", "close"]);
@@ -13,9 +13,11 @@ const title = ref("");
 const description = ref("");
 const assignee = ref("");
 const dueDate = ref("");
+const loading = ref(false);
 
 const errors = ref({ title: "", description: "", assignee: "", dueDate: "" });
 
+// Dropdown values
 const descriptionOptions = [
   "Bug Fix",
   "Programming",
@@ -64,7 +66,7 @@ const validateForm = () => {
   return valid;
 };
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (!validateForm()) return;
 
   const payload = {
@@ -79,8 +81,8 @@ const handleSubmit = () => {
   if (props.mode === "edit" && props.initialData._id) {
     payload._id = props.initialData._id;
   }
-
-  emit("submit", payload);
+  await emit("submit", payload);
+  loading.value = true;
 };
 </script>
 
@@ -129,8 +131,8 @@ const handleSubmit = () => {
       </div>
 
       <div class="modal-buttons">
-        <button class="btn-primary" @click="handleSubmit">
-          {{ mode === "edit" ? "Update" : "Add" }}
+        <button class="btn-primary" :disabled="loading" @click="handleSubmit">
+          {{ loading ? "Please wait..." : mode === "edit" ? "Update" : "Add" }}
         </button>
         <button class="btn-secondary" @click="$emit('close')">Cancel</button>
       </div>

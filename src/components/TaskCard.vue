@@ -1,7 +1,7 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { toast } from "vue3-toastify";
-import { deleteTask,updateTask } from "../services/api";
+import { deleteTask, updateTask } from "../services/api";
 import AddTaskModal from "./AddTaskModal.vue";
 
 const props = defineProps({
@@ -14,6 +14,7 @@ const emit = defineEmits(["onDeleted", "onUpdated"]);
 
 const showDropdown = ref(false);
 const showEditModal = ref(false);
+const dropdownRef = ref(null);
 
 const handleDelete = async () => {
   if (!confirm("Are you sure you want to delete this Task?")) return;
@@ -65,10 +66,10 @@ const dateLabel = computed(() => {
   } else if (diffTime === oneDay) {
     return { text: "Tomorrow", color: "blue" };
   } else {
-  const day = dueDate.getDate().toString().padStart(2, "0");
-  const month = dueDate.toLocaleString("en-US", { month: "short" }); // Aug
-  return { text: `${day} ${month}`, color: "rgb(109, 106, 106)" };
-}
+    const day = dueDate.getDate().toString().padStart(2, "0");
+    const month = dueDate.toLocaleString("en-US", { month: "short" }); // Aug
+    return { text: `${day} ${month}`, color: "rgb(109, 106, 106)" };
+  }
 });
 
 const onDragStart = (event) => {
@@ -79,13 +80,27 @@ const onDragStart = (event) => {
   );
   event.dataTransfer.effectAllowed = "move";
 };
+
+const handleClickOutside = (event) => {
+  if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
+    showDropdown.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 </script>
 
 <template>
   <div class="task-card" draggable="true" @dragstart="onDragStart">
     <div class="card-header">
       <h4 class="title">{{ task.title }}</h4>
-      <div class="menu">
+      <div class="menu" ref="dropdownRef">
         <button class="dots" @click="showDropdown = !showDropdown">⋮</button>
         <div v-if="showDropdown" class="dropdown">
           <button @click="handleTaskEdit">Edit</button>
@@ -95,7 +110,7 @@ const onDragStart = (event) => {
     </div>
 
     <div class="meta-row">
-      <div style="display: flex; align-items: center; gap: 6px;">
+      <div style="display: flex; align-items: center; gap: 6px">
         <img
           class="avatar"
           src="https://testingbot.com/free-online-tools/random-avatar/300"
@@ -109,7 +124,7 @@ const onDragStart = (event) => {
         <span class="tag">{{ task.description }}</span>
       </div>
     </div>
-     <AddTaskModal
+    <AddTaskModal
       v-if="showEditModal"
       mode="edit"
       :initialData="task"
@@ -120,9 +135,7 @@ const onDragStart = (event) => {
   </div>
 </template>
 
-
 <style scoped>
-
 .task-card {
   background: #fff;
   padding: 10px 14px;
@@ -151,7 +164,7 @@ const onDragStart = (event) => {
   margin: 0;
   color: #222;
   white-space: normal;
-  word-break: break-word; 
+  word-break: break-word;
 }
 
 .menu {
@@ -176,7 +189,7 @@ const onDragStart = (event) => {
 
 .dropdown {
   position: absolute;
-  top: 24px; 
+  top: 24px;
   right: 0;
   background: white;
   border-radius: 8px;

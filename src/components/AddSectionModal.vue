@@ -5,7 +5,7 @@ import "../assets/module.css";
 const props = defineProps({
   mode: {
     type: String,
-    default: "add",
+    default: "add", // 'add' or 'edit'
   },
   initialTitle: {
     type: String,
@@ -17,6 +17,7 @@ const emit = defineEmits(["submit", "close"]);
 
 const title = ref(props.initialTitle);
 const error = ref("");
+const loading = ref(false);
 
 // Sync prop updates (important for edit mode)
 watch(
@@ -26,12 +27,13 @@ watch(
   }
 );
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (!title.value.trim()) {
     error.value = "Title cannot be empty";
     return;
   }
-  emit("submit", title.value.trim());
+  await emit("submit", title.value.trim());
+  loading.value = true;
   title.value = "";
   error.value = "";
 };
@@ -44,8 +46,8 @@ const handleSubmit = () => {
       <input v-model="title" placeholder="Section title" />
       <p style="color: red">{{ error }}</p>
       <div class="modal-buttons">
-        <button class="btn-primary" @click="handleSubmit">
-          {{ mode === "edit" ? "Update" : "Submit" }}
+        <button class="btn-primary" :disabled="loading" @click="handleSubmit">
+          {{ loading ? "Please wait..." : mode === "edit" ? "Update" : "Add" }}
         </button>
         <button class="btn-secondary" @click="$emit('close')">Cancel</button>
       </div>
